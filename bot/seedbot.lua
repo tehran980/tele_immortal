@@ -230,15 +230,9 @@ An advance Administration bot based on yagop/telegram-bot
 https://github.com/SEEDTEAM/TeleSeed
 
 Admins
-@iwals [Founder]
-@imandaneshi [Developer]
-@seyedan25 [Manager]
-
+@Tehran98
 Special thanks to
-awkward_potato
-Siyanew
-topkecleon
-Vamptacus
+@flowed
 
 Our channels
 @teleseedch [English]
