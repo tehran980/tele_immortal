@@ -13,7 +13,7 @@ end
 
 local function chat_stats(chat_id)
   -- Users on chat
-  local hash = 'چت:'..chat_id..':users'
+  local hash = 'chat:'..chat_id..':users'
   local users = redis:smembers(hash)
   local users_info = {}
   -- Get user info
@@ -60,7 +60,7 @@ local function chat_stats2(chat_id)
       end
     end)
 
-  local text = 'کاربران در این گروه \n'
+  local text = 'users in this chat \n'
   for k,user in pairs(users_info) do
     text = text..user.name..' = '..user.msgs..'\n'
   end
@@ -72,7 +72,6 @@ local function bot_stats()
   local redis_scan = [[
     local cursor = '0'
     local count = 0
-
     repeat
       local r = redis.call("SCAN", cursor, "MATCH", KEYS[1])
       cursor = r[1]
@@ -87,34 +86,34 @@ local function bot_stats()
 
   hash = 'chat:*:users'
   r = redis:eval(redis_scan, 1, hash)
-  text = text..'\nگروه ها: '..r
+  text = text..'\nGroups: '..r
   return text
 end
 local function run(msg, matches)
-  if matches[1]:lower() == 'مکس بات' then -- Put everything you like :)
+  if matches[1]:lower() == 'teleseed' then -- Put everything you like :)
     local about = _config.about_text
     local name = user_print_name(msg.from)
     savelog(msg.to.id, name.." ["..msg.from.id.."] used /teleseed ")
     return about
   end 
-  if matches[1]:lower() == " لیست وضعیت ها" then
+  if matches[1]:lower() == "statslist" then
     if not is_momod(msg) then
-      return !فقط برای ادمین ها"
+      return "For mods only !"
     end
     local chat_id = msg.to.id
     local name = user_print_name(msg.from)
-    savelog(msg.to.id, name.." ["..msg.from.id.."] درخواست وضعیت گروه کرد ")
+    savelog(msg.to.id, name.." ["..msg.from.id.."] requested group stats ")
     return chat_stats2(chat_id)
   end
-  if matches[1]:lower() == "وضعیت" then
+  if matches[1]:lower() == "stats" then
     if not matches[2] then
       if not is_momod(msg) then
-        return "!فقط برای ادمین ها"
+        return "For mods only !"
       end
-      if msg.to.type == 'چت' then
+      if msg.to.type == 'chat' then
         local chat_id = msg.to.id
         local name = user_print_name(msg.from)
-        savelog(msg.to.id, name.." ["..msg.from.id.."] درخواست وضعیت کرد ")
+        savelog(msg.to.id, name.." ["..msg.from.id.."] requested group stats ")
         return chat_stats(chat_id)
       else
         return
@@ -122,14 +121,14 @@ local function run(msg, matches)
     end
     if matches[2] == "teleseed" then -- Put everything you like :)
       if not is_admin(msg) then
-        return "!فقط برای ادمین ها"
+        return "For admins only !"
       else
         return bot_stats()
       end
     end
     if matches[2] == "group" then
       if not is_admin(msg) then
-        return "!فقط برای ادمین ها"
+        return "For admins only !"
       else
         return chat_stats(matches[3])
       end
@@ -138,11 +137,11 @@ local function run(msg, matches)
 end
 return {
   patterns = {
-    "^(وضعیت)$",
-    "^(لیست وضعیت)$",
-    "^(وضعیت) (group) (%d+)",
-    "^(وضعیت) (مکس بات)",-- Put everything you like :)
-		"^(وضعیت مکس بات)"-- Put everything you like :)
+    "^[!/]([Ss]tats)$",
+    "^[!/]([Ss]tatslist)$",
+    "^[!/]([Ss]tats) (group) (%d+)",
+    "^[!/]([Ss]tats) (teleseed)",-- Put everything you like :)
+		"^[!/]([Tt]eleseed)"-- Put everything you like :)
     }, 
   run = run
 }
