@@ -3,9 +3,9 @@ local function callbackres(extra, success, result) -- Callback for res_user in l
   local user = 'user#id'..result.id
 	local chat = 'chat#id'..extra.chatid
 	if is_banned(result.id, extra.chatid) then -- Ignore bans
-            send_large_msg(chat, ';!کاربر بن شده است)
+            send_large_msg(chat, 'User is banned.')
 	elseif is_gbanned(result.id) then -- Ignore globall bans
-	    send_large_msg(chat, '!کاربر سوپربن شده است')
+	    send_large_msg(chat, 'User is globaly banned.')
 	else    
 	    chat_add_user(chat, user, ok_cb, false) -- Add user on chat
 	end
@@ -23,8 +23,8 @@ function run(msg, matches)
   if not is_momod(msg) then
     return
   end
-  --if not is_admin(msg) then -- !فقط ادمین ها میتوانند اینوایت کنند
-    --return '!فقط ادمین ها'
+  --if not is_admin(msg) then -- For admins only !
+    --return 'Only admins can invite.'
   --end
 	local cbres_extra = {chatid = msg.to.id}
   local username = matches[1]
@@ -33,7 +33,7 @@ function run(msg, matches)
 end
 return {
     patterns = {
-      "^دعوت (.*)$"
+      "^[!/]invite (.*)$"
     },
     run = run
 }
