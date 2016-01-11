@@ -23,8 +23,8 @@ function run(msg, matches)
   if not is_momod(msg) then
     return
   end
-  --if not is_admin(msg) then -- For admins only !
-    --return 'Only admins can invite.'
+  --if not is_admin(msg) then -- !فقط ادمین ها میتوانند اینوایت کنند
+    --return '!فقط ادمین ها'
   --end
 	local cbres_extra = {chatid = msg.to.id}
   local username = matches[1]
